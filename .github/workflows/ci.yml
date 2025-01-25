@@ -13,20 +13,28 @@ jobs:
     runs-on: ubuntu-latest  # Используем Linux-окружение
 
     steps:
-      - name: Checkout репозиторий
+      - name: Checkout репозитория
         uses: actions/checkout@v4
 
       - name: Установка зависимостей
-        run: sudo apt update && sudo apt install -y build-essential
+        run: sudo apt update && sudo apt install -y build-essential gcc
+
+      - name: Проверка наличия Makefile
+        run: |
+          if [ ! -f Makefile ]; then
+            echo "Makefile not found!"
+            exit 1
+          fi
 
       - name: Сборка проекта
         run: |
           make clean
-          make
+          make CFLAGS="-Wall -Wextra -std=c11 -fsanitize=address -g"
 
       - name: Запуск тестов
         run: |
-          LD_LIBRARY_PATH=. ./build/main > output.txt
+          export LD_LIBRARY_PATH=.
+          ./build/main > output.txt
           cat output.txt
 
       - name: Проверка вывода теста
