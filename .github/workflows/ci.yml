@@ -29,7 +29,8 @@ jobs:
       - name: Сборка проекта
         run: |
           make clean
-          make CFLAGS="-Wall -Wextra -std=c11 -fsanitize=address -g"
+          make CFLAGS="-Wall -Wextra -std=c11 -fsanitize=address -g -fPIC"
+
 
       - name: Запуск тестов
         run: |
