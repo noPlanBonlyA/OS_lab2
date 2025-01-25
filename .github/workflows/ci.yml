@@ -40,8 +40,11 @@ jobs:
             exit 1
           fi
 
+      - name: Установка LD_LIBRARY_PATH
+        run: echo "LD_LIBRARY_PATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
+
       - name: Запуск тестов
-        run: LD_LIBRARY_PATH=. ./build/main > output.txt && cat output.txt
+        run: LD_PRELOAD=$(gcc -print-file-name=libasan.so) ./build/main > output.txt && cat output.txt
 
       - name: Проверка вывода теста
         run: |
