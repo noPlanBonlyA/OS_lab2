@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest  # Используем Linux-окружение
+    runs-on: ubuntu-latest  # Используем Ubuntu для сборки
 
     steps:
       - name: Checkout репозитория
