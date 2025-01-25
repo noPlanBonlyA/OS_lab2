@@ -76,7 +76,7 @@ void test_read_write() {
             lab2_close(fd);
             return;
         }
-
+ 
         if (lab2_lseek(fd, offset, SEEK_SET) == (off_t)-1) {
             perror("Error seeking file");
             lab2_close(fd);

@@ -18,7 +18,7 @@ typedef struct FIFO_Cache {
     size_t head;
     size_t tail;
 } FIFO_Cache;
-
+ 
 FIFO_Cache* fifo_cache_init(size_t block_size, size_t block_count);
 void fifo_cache_store(FIFO_Cache *cache, off_t offset, const void *data);
 CacheBlock* fifo_cache_lookup(FIFO_Cache *cache, off_t offset);

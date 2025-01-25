@@ -19,3 +19,4 @@ int main() {
     lab2_close(fd);
     return 0;
 }
+ 

@@ -29,7 +29,7 @@ CacheBlock* fifo_cache_lookup(FIFO_Cache *cache, off_t offset) {
     }
     return NULL;
 }
-
+ 
 void fifo_cache_free(FIFO_Cache *cache) {
     if (!cache) return;
 

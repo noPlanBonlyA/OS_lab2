@@ -27,3 +27,4 @@ build/main: src/main.c $(TARGET)
 clean:
 	rm -f $(TARGET) build/test_large build/main
 	rm -rf src/*.o
+ 
