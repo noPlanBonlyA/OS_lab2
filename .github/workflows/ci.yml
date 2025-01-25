@@ -1,0 +1,43 @@
+name: CI - Build and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest  # Используем Linux-окружение
+
+    steps:
+      - name: Checkout репозиторий
+        uses: actions/checkout@v4
+
+      - name: Установка зависимостей
+        run: sudo apt update && sudo apt install -y build-essential
+
+      - name: Сборка проекта
+        run: |
+          make clean
+          make
+
+      - name: Запуск тестов
+        run: |
+          LD_LIBRARY_PATH=. ./build/main > output.txt
+          cat output.txt
+
+      - name: Проверка вывода теста
+        run: |
+          if grep -q "Read from cache: Hello, cache!" output.txt; then
+            echo "Test passed!"
+            exit 0
+          else
+            echo "Test failed!"
+            exit 1
+          fi
+
+      - name: Очистка после тестов
+        run: make clean
