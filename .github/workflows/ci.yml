@@ -10,14 +10,16 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest  # Используем Ubuntu для сборки
+    runs-on: ubuntu-latest  
 
     steps:
       - name: Checkout репозитория
         uses: actions/checkout@v4
 
       - name: Установка зависимостей
-        run: sudo apt update && sudo apt install -y build-essential gcc
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential gcc manpages-posix manpages-posix-dev
 
       - name: Проверка наличия Makefile
         run: |
@@ -29,8 +31,7 @@ jobs:
       - name: Сборка проекта
         run: |
           make clean
-          make CFLAGS="-Wall -Wextra -std=c11 -fsanitize=address -g -fPIC"
-
+          make CFLAGS="-Wall -Wextra -std=c11 -fsanitize=address -g -fPIC -D_POSIX_C_SOURCE=200809L"
 
       - name: Запуск тестов
         run: |
@@ -47,6 +48,16 @@ jobs:
             echo "Test failed!"
             exit 1
           fi
+
+      - name: Проверка утечек памяти с AddressSanitizer
+        run: |
+          export LD_PRELOAD=$(gcc -print-file-name=libasan.so)
+          ./build/main > asan_output.txt
+          if grep -qi "ERROR" asan_output.txt; then
+            echo "Memory leaks detected!"
+            exit 1
+          fi
+          echo "No memory leaks found."
 
       - name: Очистка после тестов
         run: make clean
