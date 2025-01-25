@@ -64,12 +64,16 @@ int lab2_close(int fd) {
 ssize_t lab2_read(int fd, void *buf, size_t count) {
 #ifdef __APPLE__
     posix_fadvise(fd, 0, count, POSIX_FADV_DONTNEED);
+#elif defined(__linux__)
+    posix_fadvise(fd, 0, count, POSIX_FADV_DONTNEED);
 #endif
     return read(fd, buf, count);
 }
 
 ssize_t lab2_write(int fd, const void *buf, size_t count) {
 #ifdef __APPLE__
+    posix_fadvise(fd, 0, count, POSIX_FADV_DONTNEED);
+#elif defined(__linux__)
     posix_fadvise(fd, 0, count, POSIX_FADV_DONTNEED);
 #endif
     return write(fd, buf, count);

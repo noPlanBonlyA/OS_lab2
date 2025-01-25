@@ -8,7 +8,7 @@ TARGET = libcache.so
 
 .PHONY: all clean
 
-all: $(TARGET) build/test_large build/main
+all: $(TARGET) build/test_large build/main build/load_io
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
@@ -24,7 +24,10 @@ build/main: src/main.c $(TARGET)
 	mkdir -p build
 	$(CC) $(CFLAGS) -o $@ src/main.c -L. -lcache
 
+build/load_io: src/load_io.c
+	mkdir -p build
+	$(CC) $(CFLAGS) -o $@ src/load_io.c
+
 clean:
-	rm -f $(TARGET) build/test_large build/main
+	rm -f $(TARGET) build/test_large build/main build/io_load
 	rm -rf src/*.o
- 
