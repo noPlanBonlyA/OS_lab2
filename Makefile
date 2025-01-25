@@ -10,7 +10,10 @@ TARGET = libcache.so
 
 all: $(TARGET) build/test_large build/main
 
-$(TARGET): $(SRC)
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 build/test_large: src/test_large.c $(TARGET)
