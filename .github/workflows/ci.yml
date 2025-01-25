@@ -31,13 +31,17 @@ jobs:
       - name: Сборка проекта
         run: |
           make clean
-          make CFLAGS="-Wall -Wextra -std=c11 -fsanitize=address -g -fPIC -D_POSIX_C_SOURCE=200809L"
+          make all
+
+      - name: Проверка наличия библиотеки
+        run: |
+          if [ ! -f libcache.so ]; then
+            echo "Ошибка: libcache.so не найдена!"
+            exit 1
+          fi
 
       - name: Запуск тестов
-        run: |
-          export LD_LIBRARY_PATH=.
-          ./build/main > output.txt
-          cat output.txt
+        run: LD_LIBRARY_PATH=. ./build/main > output.txt && cat output.txt
 
       - name: Проверка вывода теста
         run: |
@@ -51,8 +55,7 @@ jobs:
 
       - name: Проверка утечек памяти с AddressSanitizer
         run: |
-          export LD_PRELOAD=$(gcc -print-file-name=libasan.so)
-          ./build/main > asan_output.txt
+          LD_PRELOAD=$(gcc -print-file-name=libasan.so) ./build/main > asan_output.txt
           if grep -qi "ERROR" asan_output.txt; then
             echo "Memory leaks detected!"
             exit 1
